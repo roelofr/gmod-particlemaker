@@ -2,12 +2,6 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
---Wiremod
-AddCSLuaFile("wm_cl_init.lua")
-AddCSLuaFile("wm_shared.lua")
-include("wm_shared.lua")
-include("wm_init.lua")
-
 if SERVER then
 	util.AddNetworkString( "ParticleMakerDupe" )
 end

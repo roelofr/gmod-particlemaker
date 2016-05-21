@@ -1,8 +1,5 @@
 include('shared.lua')
 
-include('wm_shared.lua')
-include('wm_cl_init.lua')
-
 ENT.Spawnable			= false
 ENT.AdminSpawnable		= false
 ENT.RenderGroup 		= RENDERGROUP_OPAQUE

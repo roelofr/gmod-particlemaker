@@ -2,9 +2,9 @@
 ENT.Type 		= "anim"
 ENT.Base 		= "base_gmodentity"
 
-ENT.PrintName	= ""
-ENT.Author		= "Roelof"
-ENT.Contact		= ""
+ENT.PrintName	= "Particle Maker"
+ENT.Author		= "SirQuack"
+ENT.Contact		= "https://github.com/roelofr/GMod-ParticleMaker"
 
 function ENT:SetData(Data)
 	for _,v in pairs(Data) do
