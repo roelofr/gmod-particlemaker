@@ -1,0 +1,11 @@
+{
+	"title"		:	"Particle Maker",
+	"type"		:	"tool",
+	"tags"		:	[ "scenic", "build" ],
+	"ignore"	:
+	[
+		".git",
+		"README.md",
+		"LICENSE"
+	]
+}
