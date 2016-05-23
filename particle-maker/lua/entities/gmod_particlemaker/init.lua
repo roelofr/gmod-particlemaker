@@ -1,3 +1,20 @@
+/**
+ * Copyright 2016 Roelof Roos (SirQuack)
+ * Part of Particle Maker Garry's Mod Tool
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
@@ -8,23 +25,23 @@ end
 
 function ENT:UpdateInputs()
 	if not WireAddon or WireLib == nil then return end
-	
+
 	local WMD = self.Entity.wireModData
-	
+
 	if WMD == nil or not WMD.On then
 		self.Inputs = WireLib.CreateSpecialInputs(self.Entity, {}, {})
 		return
 	end
-	
+
 	local wireInputs = {}
 	table.insert( wireInputs, { "Fire", "NORMAL" } )
-	
+
 		-- Change Colors
 	if WMD.Colour then
 		table.insert( wireInputs, { "Color1", "COLOR" } )
 		table.insert( wireInputs, { "Color2", "COLOR" } )
 	end
-		
+
 		-- Main properties change
 	if WMD.Basic then
 		table.insert( wireInputs, { "Velocity", "NORMAL" } )
@@ -41,7 +58,7 @@ function ENT:UpdateInputs()
 		table.insert( wireInputs, { "StartLength", "NORMAL" } )
 		table.insert( wireInputs, { "EndLength", "NORMAL" } )
 	end
-	
+
 	if WMD.Advanced then
 		table.insert( wireInputs, { "RollRand", "NORMAL" } )
 		table.insert( wireInputs, { "RollDelta", "NORMAL" } )
@@ -63,27 +80,27 @@ function ENT:UpdateInputs()
 		table.insert( wireInputs, { "StickStartAlpha", "NORMAL" } )
 		table.insert( wireInputs, { "StickEndAlpha", "NORMAL" } )
 	end
-	
+
 	local InA, InB = {}, {}
-	
+
 	for _,v in pairs(wireInputs) do
 		table.insert( InA, v[1] )
 		table.insert( InB, v[2] )
 	end
-	
+
 	self.Inputs = WireLib.CreateSpecialInputs(self.Entity, InA, InB)
 end
 
 function ENT:GetWiremodSettings( Data )
 	self.Entity.wireModData = { On = false, Colour = false, Basic = false, Effects = false, Advanced = false }
-	
-	local opts = self:KeyToNameValue( Data )	
+
+	local opts = self:KeyToNameValue( Data )
 	self.Entity.wireModData.On = Either( opts['wire_enabled'] ~= nil and opts['wire_enabled'], true, false )
 	self.Entity.wireModData.Colour = Either( opts['wire_colour'] ~= nil and opts['wire_colour'], true, false )
 	self.Entity.wireModData.Basic = Either( opts['wire_basic'] ~= nil and opts['wire_basic'], true, false )
 	self.Entity.wireModData.Effects = Either( opts['wire_effects'] ~= nil and opts['wire_effects'], true, false )
 	self.Entity.wireModData.Advanced = Either( opts['wire_advanced'] ~= nil and opts['wire_advanced'], true, false )
-	
+
 	self:UpdateInputs()
 end
 
@@ -92,23 +109,23 @@ function ENT:Initialize()
 	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )
-		
+
 	local phys = self:GetPhysicsObject()
-	
+
 	self.PhysgunDisabled = false
-	
+
 	self.Entity.wireModData = { On = false, Colour = false, Basic = false, Effects = false, Advanced = false }
-	
+
 	self.Firing = false
 	self.FiringWire = false
-	
+
 	self:SetOverlayText( "Particle Emitter" )
-	
+
 	self:UpdateInputs()
 end
 
 function ENT:OnRemove()
-	if WireAddon then 
+	if WireAddon then
 		Wire_Remove(self.Entity)
 	end
 end
@@ -116,7 +133,7 @@ end
 function ENT:TriggerInput(Name, Value)
 	if (Name == "Fire") then
 		local Ent = self:GetTable()
-		
+
 		if self:GetToggleWiremod() then
 			if Value ~= 0 and not self.hasToggledWM then
 				self:SetOn( 'wire', not self.FiringWire )
@@ -138,7 +155,7 @@ function ENT:TriggerInput(Name, Value)
 	elseif Name == "Color2" then
 		self:TriggerInput( "ColorR2", Value[1] )
 		self:TriggerInput( "ColorG2", Value[2] )
-		self:TriggerInput( "ColorB2", Value[3] )	
+		self:TriggerInput( "ColorB2", Value[3] )
 	else
 		for _,v in pairs(ParticleOptions) do
 			if (Name == v.Name) then
@@ -146,11 +163,11 @@ function ENT:TriggerInput(Name, Value)
 					-- ALWAYS Clamp stuff in multiplayer.. because people are idiots T_T
 					Value = math.Clamp(Value, v.Min, v.Max)
 				end
-				
+
 				if (v.Type == "Bool") then
 					Value = util.tobool(Value)
 				end
-				
+
 				self:SetData({{Name = v.Name, Type = v.Type, Value = Value}})
 			end
 		end
@@ -182,9 +199,9 @@ function ENT:SetOn(source, on)
 		self.FiringWire = on
 	end
 	local isOn = ( self.Firing or self.FiringWire )
-	
+
 	self.Entity:SetNetworkedBool("Activated", isOn)
-	
+
 	local shouldFireShot = ( isOn ~= onBefore and isOn )
 	if shouldFireShot then
 		self:FireShot()
@@ -205,16 +222,16 @@ function ENT:GetDelay()
 end
 
 function ENT:FireShot()
-	
+
 	local Pos = self.Entity:GetPos()
 	Pos = Pos + self.Entity:GetUp() * 4
-	
+
 	// Make the effects
 	local Effect = EffectData()
 		Effect:SetOrigin(Pos)
 		Effect:SetEntity(self.Entity)
 	util.Effect("particle_custom", Effect)
-	
+
 end
 
 
@@ -246,7 +263,7 @@ end
 local function On(Ply, Ent)
 	if not Ent or Ent == nil or Ent == NULL then return end
 	if Ent:GetClass() != "gmod_particlemaker" then return end
-	
+
 	if Ent:GetToggle() then
 		Ent:SetOn( 'key', not Ent.Firing )
 	else
@@ -257,7 +274,7 @@ end
 local function Off(Ply, Ent)
 	if not Ent or Ent == nil or Ent == NULL then return end
 	if Ent:GetClass() != "gmod_particlemaker" then return end
-	
+
 	if not Ent:GetToggle() then
 		Ent:SetOn( 'key', false )
 	end
