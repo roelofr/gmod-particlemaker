@@ -55,7 +55,7 @@ local function CreateSegment(CPanel, title)
     return Panel
 end
 
-// Add all settings
+-- Add all settings
 for _,v in pairs(ParticleOptions) do
 	TOOL.ClientConVar[v.Name] = v.Value
 end
@@ -158,7 +158,7 @@ function TOOL:LeftClick( Trace )
 		return false
 	end
 
-	// We shot an existing particle maker - just change its values
+	-- We shot an existing particle maker - just change its values
 	if (
         Trace.Entity:IsValid() and
         (Trace.Entity:GetClass() == "gmod_particlemaker" or
@@ -258,7 +258,7 @@ end
 
 function TOOL.BuildCPanel(CPanel)
 
-	// MAIN HEADER
+	-- MAIN HEADER
 	CPanel:Help("#tool.particle_maker.desc")
 
     SirQuack.ParticleMaker.runOnce(CPanel)
@@ -293,16 +293,16 @@ function TOOL.BuildCPanel(CPanel)
 
     CPanel:AddPanel(frm)
 
-    //  Weld to props?
+    --  Weld to props?
     frm:CheckBox("#tool.particle_maker.weld", "particle_maker_Weld")
 
-    // Spawn frozen?
+    -- Spawn frozen?
     frm:CheckBox("#tool.particle_maker.frozen", "particle_maker_Frozen")
 
-    // Toggle
+    -- Toggle
     frm:CheckBox("#tool.particle_maker.toggle", "particle_maker_Toggle")
 
-	// Activation button
+	-- Activation button
     local ctrl = vgui.Create("CtrlNumPad", frm)
     ctrl:SetConVar1("particle_maker_Key")
     ctrl:SetLabel1("#tool.particle_maker.key")
@@ -320,22 +320,33 @@ function TOOL.BuildCPanel(CPanel)
 
     CPanel:AddPanel(frm)
 
-	local ctrl = vgui.Create("CtrlColor", frm)
+    -- Color 1
+	local ctrl = vgui.Create("DColorMixer", frm)
+
     ctrl:SetLabel("#tool.particle_maker.color.1")
 	ctrl:SetConVarR("particle_maker_ColorR1")
     ctrl:SetConVarG("particle_maker_ColorG1")
 	ctrl:SetConVarB("particle_maker_ColorB1")
+
+    ctrl:SetAlphaBar(false)
+    ctrl:SetPalette(true)
+
     frm:AddItem(ctrl, nil)
 
-	// Color 2
-	local ctrl = vgui.Create("CtrlColor", CPanel)
+	-- Color 2
+	local ctrl = vgui.Create("DColorMixer", frm)
+
     ctrl:SetLabel("#tool.particle_maker.color.2")
 	ctrl:SetConVarR("particle_maker_ColorR2")
     ctrl:SetConVarG("particle_maker_ColorG2")
 	ctrl:SetConVarB("particle_maker_ColorB2")
+
+    ctrl:SetAlphaBar(false)
+    ctrl:SetPalette(true)
+
     frm:AddItem(ctrl, nil)
 
-    // Random color
+    -- Random color
     frm:CheckBox(
         "#tool.particle_maker.color.mix",
         "particle_maker_ColorRand"
@@ -368,7 +379,7 @@ function TOOL.BuildCPanel(CPanel)
 
     frm:AddItem(ctrl, nil)
 
-	// Material textbox
+	-- Material textbox
 	frm:TextEntry("#tool.particle_maker.material", "particle_maker_Material")
 
     frm:SizeToContentsY()
@@ -382,126 +393,126 @@ function TOOL.BuildCPanel(CPanel)
     frm:SetLabel("#tool.particle_maker.hdr.effect")
     CPanel:AddPanel(frm)
 
-	// Fire delay
+	-- Fire delay
 	frm:NumSlider(
         "#tool.particle_maker.fire_delay",
         "particle_maker_Delay",
         0.001, 10, 2
     )
 
-	// Number particles
+	-- Number particles
 	frm:NumSlider(
         "#tool.particle_maker.partice_count",
         "particle_maker_Number",
 		1, 10, 0
 	)
 
-	// Velocity
+	-- Velocity
 	frm:NumSlider(
         "#tool.particle_maker.velocity",
         "particle_maker_Velocity",
 		1, 10000, 0
 	)
 
-	// Spread
+	-- Spread
 	frm:NumSlider(
         "#tool.particle_maker.spread",
         "particle_maker_Spread",
 		0, 360, 0
 	)
 
-	// Die time
+	-- Die time
 	frm:NumSlider(
         "#tool.particle_maker.die_time",
         "particle_maker_DieTime",
 		1, 10, 1
 	)
 
-	// Start alpha
+	-- Start alpha
 	frm:NumSlider(
         "#tool.particle_maker.alpha.start",
         "particle_maker_StartAlpha",
 		0, 255, 0
 	)
 
-	// End alpha
+	-- End alpha
 	frm:NumSlider(
         "#tool.particle_maker.alpha.end",
         "particle_maker_EndAlpha",
 		0, 255, 0
 	)
 
-	// Start size
+	-- Start size
 	frm:NumSlider(
         "#tool.particle_maker.size.start",
         "particle_maker_StartSize",
 		0, 100, 0
 	)
 
-	// End size
+	-- End size
 	frm:NumSlider(
         "#tool.particle_maker.size.end",
         "particle_maker_EndSize",
 		0, 100, 0
 	)
 
-	// Start length
+	-- Start length
 	frm:NumSlider(
         "#tool.particle_maker.length.start",
         "particle_maker_StartLength",
 		0, 100, 0
 	)
 
-	// End length
+	-- End length
 	frm:NumSlider(
         "#tool.particle_maker.length.end",
         "particle_maker_EndLength",
 		0, 100, 0
 	)
 
-	// Roll
+	-- Roll
 	frm:NumSlider(
         "#tool.particle_maker.roll_speed",
         "particle_maker_RollRand",
 		0, 10, 2
 	)
 
-	// Roll delta
+	-- Roll delta
 	frm:NumSlider(
         "#tool.particle_maker.roll_delta",
         "particle_maker_RollDelta",
 		-10, 10, 2
 	)
 
-	// Air resistance
+	-- Air resistance
 	frm:NumSlider(
         "#tool.particle_maker.air_resistance",
         "particle_maker_AirResistance",
 		0, 1000, 0
 	)
 
-	// Bounce
+	-- Bounce
 	frm:NumSlider(
         "#tool.particle_maker.bounce",
         "particle_maker_Bounce",
 		0, 10, 2
 	)
 
-	// Gravity
+	-- Gravity
 	frm:NumSlider(
         "#tool.particle_maker.gravity",
         "particle_maker_Gravity",
 		-1000, 1000, 0
 	)
 
-	// Collision
-	frm:CheckBox("#tool.particle_maker.collide", "particle_maker_Collide")
+	-- Collision
+	local _cld = frm:CheckBox("#tool.particle_maker.collide", "particle_maker_Collide")
 
-	// Lighting
+	-- Lighting
 	frm:CheckBox("#tool.particle_maker.lighting", "particle_maker_Lighting")
 
-	// Slide
-	frm:CheckBox("#tool.particle_maker.sliding", "particle_maker_Sliding")
+	-- Slide
+	local _sld = frm:CheckBox("#tool.particle_maker.sliding", "particle_maker_Sliding")
 	frm:ControlHelp("#tool.particle_maker.sliding.help")
 
     frm:SizeToContentsY()
@@ -514,92 +525,72 @@ function TOOL.BuildCPanel(CPanel)
     frm:SetLabel("#tool.particle_maker.hdr.3d")
     CPanel:AddPanel(frm)
 
-	// Toggle 3D
+	-- Toggle 3D
 	local _3d = frm:CheckBox("#tool.particle_maker.3d", "particle_maker_3D")
 
-	// Double sided
+	-- Double sided
 	local _3dt = frm:CheckBox(
         "#tool.particle_maker.doublesided", "particle_maker_DoubleSided")
     frm:ControlHelp("#tool.particle_maker.doublesided.help")
 
-	// Stick
+	-- Stick
 	local _3ds = frm:CheckBox(
         "#tool.particle_maker.stick", "particle_maker_Stick")
     frm:ControlHelp("#tool.particle_maker.stick.help")
 
-	// Align
+	-- Align
 	local _3da = frm:CheckBox(
         "#tool.particle_maker.align", "particle_maker_Align")
     frm:ControlHelp("#tool.particle_maker.align.help")
 
-    -- Disabling dependancies
-    _3d.OnChange = function(on)
-        if not on then
-            _3dt:SetValue(false)
-            _3ds:SetValue(false)
-            _3da:SetValue(false)
-        end
-        _3dt:SetEnabled(on)
-        _3ds:SetEnabled(on)
-        _3da:SetEnabled(on)
-    end
-
-    _3ds.OnChange = function(on)
-        if not on then
-            _3da:SetValue(false)
-        end
-        _3da:SetEnabled(on)
-    end
-
-
-	// Angle velocity X
+	-- Angle velocity X
 	frm:NumSlider(
 		"#tool.particle_maker.angvel.x",
         "particle_maker_AngleVelX",
 		-500, 500, 2
 	)
 
-	// Angle velocity Y
+	-- Angle velocity Y
 	frm:NumSlider(
 		"#tool.particle_maker.angvel.y",
         "particle_maker_AngleVelY",
 		-500, 500, 2
 	)
 
-	// Angle velocity Z
+	-- Angle velocity Z
 	frm:NumSlider(
 		"#tool.particle_maker.angvel.z",
         "particle_maker_AngleVelZ",
 		-500, 500, 2
 	)
 
-	// Stick lifetime
+	-- Stick lifetime
 	frm:NumSlider(
 		"#tool.particle_maker.sticklifetime",
         "particle_maker_StickLifeTime",
 		0.01, 10, 2
 	)
 
-	// Stick start size
+	-- Stick start size
 	frm:NumSlider(
         "#tool.particle_maker.stickstartsize", "particle_maker_StickStartSize",
         0, 100, 2
 	)
 
-	// Stick end size
+	-- Stick end size
 	frm:NumSlider(
         "#tool.particle_maker.stickendsize", "particle_maker_StickEndSize",
         0, 100, 2
 	)
 
-	// Stick start alpha
+	-- Stick start alpha
 	frm:NumSlider(
         "#tool.particle_maker.stickstartalpha",
         "particle_maker_StickStartAlpha",
         0, 255, 2
 	)
 
-	// Stick end alpha
+	-- Stick end alpha
 	frm:NumSlider(
         "#tool.particle_maker.stickendalpha", "particle_maker_StickEndAlpha",
         0, 255, 2
@@ -608,36 +599,97 @@ function TOOL.BuildCPanel(CPanel)
     frm:SizeToContentsY()
     frm:InvalidateLayout()
 
-	// Check if wire exists
+	-- Check if wire exists
 
-	// WIRE HEADER
-	//Header( CPanel, "Wiremod settings" )
-	//CPanel:AddControl("Label", { Text = "If you want to control your emitter with Wiremod, check the box below. Most users will have sufficient control with Basic" })
-    //
-	////Add enable wire checkbox
-	//CPanel:AddControl("Checkbox", {
-    //    Label = "Enable wire inputs",
-    //    Command = "particle_maker_wire_enable"
-    //})
-	//CPanel:AddControl("Label", {
-    //    Text = "A \"Fire\" output is automatically added when the box above is checked.\nCheckboxes below will only have effect if you've enabled the checkbox above."
-    //})
-    //
-	//	// Add all checkboxes
-	//CPanel:AddControl("Checkbox", {
-    //    Label = "Basic particle controls",
-    //    Command = "particle_maker_wire_basic"
-    //})
-	//CPanel:AddControl("Checkbox", {
-    //    Label = "Colour controls",
-    //    Command = "particle_maker_wire_colour"
-    //})
-	//CPanel:AddControl("Checkbox", {
-    //    Label = "Effect controls",
-    //    Command = "particle_maker_wire_effects"
-    //})
-	//CPanel:AddControl("Checkbox", {
-    //    Label = "Advanced particle controls",
-    //    Command = "particle_maker_wire_advanced"
-    //})
+	-- WIRE HEADER
+	-- Header( CPanel, "Wiremod settings" )
+	-- CPanel:AddControl("Label", { Text = "If you want to control your emitter with Wiremod, check the box below. Most users will have sufficient control with Basic" })
+    --
+	-- -- Add enable wire checkbox
+	-- CPanel:AddControl("Checkbox", {
+    --    Label = "Enable wire inputs",
+    --    Command = "particle_maker_wire_enable"
+    -- })
+	-- CPanel:AddControl("Label", {
+    --    Text = "A \"Fire\" output is automatically added when the box above is checked.\nCheckboxes below will only have effect if you've enabled the checkbox above."
+    -- })
+    --
+	-- -- Add all checkboxes
+	-- CPanel:AddControl("Checkbox", {
+    --    Label = "Basic particle controls",
+    --    Command = "particle_maker_wire_basic"
+    -- })
+	-- CPanel:AddControl("Checkbox", {
+    --    Label = "Colour controls",
+    --    Command = "particle_maker_wire_colour"
+    -- })
+	-- CPanel:AddControl("Checkbox", {
+    --    Label = "Effect controls",
+    --    Command = "particle_maker_wire_effects"
+    -- })
+	-- CPanel:AddControl("Checkbox", {
+    --    Label = "Advanced particle controls",
+    --    Command = "particle_maker_wire_advanced"
+    -- })
+
+    --[[
+        Helper methods
+    ]]
+
+    -- Enforce valid rules
+    _cld.OnChange = function()
+        if not _cld:GetChecked() then
+            _sld:SetChecked( false )
+        end
+    end;
+
+    _sld.OnChange = function()
+        if _sld:GetChecked() then
+            _cld:SetChecked( true )
+            _3ds:SetChecked( false )
+            _3da:SetChecked( false )
+        end
+    end
+
+    _3d.OnChange = function()
+        if not _3d:GetChecked() then
+            _3dt:SetChecked( false )
+            _3ds:SetChecked( false )
+            _3da:SetChecked( false )
+        end
+    end
+
+    _3dt.OnChange = function()
+        if _3dt:GetChecked() then
+            _3d:SetChecked( true )
+        end
+    end
+
+    _3ds.OnChange = function()
+        if _3ds:GetChecked() then
+            _3d:SetChecked( true )
+        end
+    end
+
+    _3da.OnChange = function()
+        if _3da:GetChecked() then
+            _3d:SetChecked( true )
+            _3ds:SetChecked( true )
+        end
+    end
+
+    if not _3d:GetChecked() then
+        _3dt:SetChecked( false )
+        _3ds:SetChecked( false )
+        _3da:SetChecked( false )
+    end
+
+    if not _cld:GetChecked() then
+        _sld:SetChecked( false )
+    end
+
+    if _sld:GetChecked() then
+        _3ds:SetChecked( false )
+        _3da:SetChecked( false )
+    end
 end

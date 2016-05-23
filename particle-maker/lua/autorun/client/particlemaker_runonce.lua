@@ -55,7 +55,7 @@ SirQuack.ParticleMaker.runOnce = function(dermaPanel)
     local frame = vgui.Create("DForm", dermaPanel)
 
     frame:SetName("#tool.particle_maker.changes")
-    frame:SetExpanded(versionConvar:GetInt() >= runOnceConvar:GetInt())
+    frame:SetExpanded(versionConvar:GetInt() > runOnceConvar:GetInt())
     frame:Dock( TOP )
 
     dermaPanel:AddItem( frame, nil )
