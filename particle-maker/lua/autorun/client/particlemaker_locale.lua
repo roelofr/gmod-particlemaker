@@ -64,6 +64,9 @@ local function registerLanguage()
     local currentLocal = 'en'
     local languageFile = 'resource/localization/%s/particlemaker.properties'
 
+    -- Locales unavailable, abort.
+    if currentText == "new_game" then return end
+
     for _, test in pairs(localeLinks) do
         if test[1] == currentText then
             currentLocal = test[2]
@@ -101,14 +104,19 @@ local function registerLanguage()
 
 end
 
+-- Run registration upon initialisation
 hook.Add(
     "Initialise",
     "ParticleMaker_Initialise_Locales",
     registerLanguage
 )
 
+-- Run registration upon entity ready
 hook.Add(
     "InitPostEntity",
     "ParticleMaker_InitPostEntity_Locales",
     registerLanguage
 )
+
+-- Run it now too, to fix issue #4
+registerLanguage()
