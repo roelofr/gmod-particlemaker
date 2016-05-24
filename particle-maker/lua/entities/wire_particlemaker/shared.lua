@@ -16,11 +16,13 @@
  */
 
 ENT.Type 		= "anim"
-ENT.Base 		= "base_gmodentity"
+ENT.Base 		= "base_wire_entity"
 
-ENT.PrintName	= "Particle Maker"
+ENT.PrintName	= "Particle Maker (wire)"
 ENT.Author		= "SirQuack"
 ENT.Contact		= "https://github.com/roelofr/GMod-ParticleMaker"
+
+ENT.WireDebugName   = "Particle Maker"
 
 function ENT:SetupDataTables()
     SirQuack.ParticleMaker.assignNetworkVars(self)
