@@ -16,3 +16,4 @@
  */
 
 util.AddNetworkString( "ParticleMakerError" )
+util.AddNetworkString( "ParticleMakerDupe" )

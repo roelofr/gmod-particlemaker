@@ -23,6 +23,28 @@
     Afterwards, we manually add the file to the language database.
 ]]
 
+local function parseProperiesFile(path)
+    local data = file.Read(path, 'GAME')
+    local dataLines = string.Split(data, "\n")
+
+    local result = {}
+
+    for _, line in pairs(dataLines) do
+        line = string.Trim(line)
+        if string.len(line) == 0 then continue end
+        if string.sub(line, 0, 1) == '#' then continue end
+
+        local _, _, key, value = string.find(
+            line,
+            '([%w%p_]+)=(.+)'
+        )
+
+        result[key] = value
+    end
+
+    return result
+end
+
 local function registerLanguage()
     // Generated with get-locales.php
     local localeLinks = {
@@ -74,34 +96,28 @@ local function registerLanguage()
         end
     end
 
-    local langPath = string.format(languageFile, currentLocal)
+    local baseLangPath = string.format(languageFile, 'en')
+    local userLangPath = string.format(languageFile, currentLocal)
 
-    if not file.Exists(langPath, 'GAME') then
-        print("Falling back")
-        langPath = string.format(languageFile, 'en')
-    end
-
-    if not file.Exists(langPath, 'GAME') then
-        Error("Cannot use path at " .. langPath)
-        return
-    end
-
-    local data = file.Read(langPath, 'GAME')
-    local dataLines = string.Split(data, "\n")
-
-    for _, line in pairs(dataLines) do
-        line = string.Trim(line)
-        if string.len(line) == 0 then continue end
-        if string.sub(line, 0, 1) == '#' then continue end
-
-        local _, _, key, value = string.find(
-            line,
-            '([%w%p_]+)=(.+)'
+    if not file.Exists(baseLangPath, 'GAME') then
+        Error(
+            'Base locale file of Particle Maker not found!'
         )
-
-        language.Add(key, value)
     end
 
+    local strings = {}
+
+    -- Load the template string, the user language will override these but this
+    -- prevents ugly non-translated strings from showing up.
+    table.Merge(strings, parseProperiesFile(baseLangPath))
+
+    if currentLocal != 'en' and file.Exists(userLangPath, 'GAME') then
+        table.Merge(strings, parseProperiesFile(userLangPath))
+    end
+
+    for key, val in pairs(strings) do
+        language.Add(key, val)
+    end
 end
 
 -- Run registration upon initialisation

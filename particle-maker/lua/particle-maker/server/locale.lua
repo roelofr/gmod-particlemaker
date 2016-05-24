@@ -15,25 +15,21 @@
  * limitations under the License.
  */
 
-local properCaps = function(phrase)
-    local txt = language.GetPhrase(phrase)
-    return string.upper(string.sub(txt, 1, 2)) .. string.sub(txt, 2)
-end
+--[[
+    This file adds all available locales to the download list. It's not worth
+    downloading a whole workshop addon for 10 files max.
+]]
 
+local localePath = "resources/localization/*"
+local filePath = "resources/localization/*/particlemaker.properties"
 
+local _, locales = file.Find(localePath, 'GAME')
 
-net.Receive( "ParticleMakerError", function( length )
-    local data = {}
-    for i=1,length do
-        local str = net.ReadString()
-        if string.len( string.Trim( str ) ) > 1 then
-            table.insert( data, str )
-        end
+-- Include shared files
+for _, locale in pairs(locales) do
+    local langFile = string.format(filePath, locale)
+
+    if file.Exists(langFile, 'GAME') then
+        resource.AddFile(langFile)
     end
-
-    Derma_Message(
-        data[1] ,
-        properCaps('notice') .. ' - Particle Maker',
-        properCaps('continue')
-        )
-end )
+end

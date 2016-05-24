@@ -162,9 +162,9 @@ SirQuack.ParticleMaker.getParticleOptions = function()
         Name = "RollDelta",
         Type = "Float",
         Value = 0,
-        Min = -10
-        ,		Max =
-        10	},
+        Min = -10,
+        Max = 10
+    },
 	{
         Name = "AirResistance",
         Type = "Float",
@@ -184,7 +184,8 @@ SirQuack.ParticleMaker.getParticleOptions = function()
         Type = "Float",
         Value = -50,
         Min = -1000,
-        Max = 1000	},
+        Max = 1000
+    },
 	{
         Name = "Collide",
         Type = "Bool",
@@ -239,23 +240,23 @@ SirQuack.ParticleMaker.getParticleOptions = function()
         Name = "AngleVelX",
         Type = "Float",
         Value = 50,
-        Min = -500
-        ,		Max =
-        500	},
+        Min = -500,
+        Max = 500
+    },
 	{
         Name = "AngleVelY",
         Type = "Float",
         Value = 50,
-        Min = -500
-        ,		Max =
-        500	},
+        Min = -500,
+        Max = 500
+    },
 	{
         Name = "AngleVelZ",
         Type = "Float",
         Value = 50,
-        Min = -500
-        ,		Max =
-        500	},
+        Min = -500,
+        Max = 500
+    },
 	{
         Name = "StickLifeTime",
         Type = "Float",
@@ -291,37 +292,15 @@ SirQuack.ParticleMaker.getParticleOptions = function()
         Min = 0,
         Max = 255
     },
-
 	{
-        Name = "wire_enabled",
-        Type = "Bool",
-        Value = 1,
-        Min = 0,
-        Max = 1
-    },
-	{
-        Name = "wire_basic",
-        Type = "Bool",
-        Value = 1,
-        Min = 0,
-        Max = 1
-    },
-	{
-        Name = "wire_colour",
+        Name = "Wire",
         Type = "Bool",
         Value = 0,
         Min = 0,
         Max = 1
     },
 	{
-        Name = "wire_effects",
-        Type = "Bool",
-        Value = 0,
-        Min = 0,
-        Max = 1
-    },
-	{
-        Name = "wire_advanced",
+        Name = "WireAvanced",
         Type = "Bool",
         Value = 0,
         Min = 0,
