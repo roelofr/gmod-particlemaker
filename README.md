@@ -50,7 +50,7 @@ If possible, add screenshots or videos.
 
 ## Help translate
 
-See the [Wiki page](wiki/Localization).
+See the [Wiki page][translate-wiki].
 
 ## Help development
 
@@ -60,3 +60,5 @@ an issue to work on, as I can keep track of what's going on that way.
 [workshop]: https://steamcommunity.com/sharedfiles/filedetails/?id=104466547
 [license]: LICENSE
 [wiremod]: https://github.com/wiremod/wire
+[translate-wiki]: https://github.com/roelofr/GMod-ParticleMaker/wiki/Localization
+
