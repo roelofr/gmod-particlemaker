@@ -62,13 +62,7 @@ SirQuack.ParticleMaker.getPresetOptions = function()
     			particle_maker_StickStartSize = '20',
     			particle_maker_StickEndSize = '0',
     			particle_maker_StickStartAlpha = '255',
-    			particle_maker_StickEndAlpha = '0',
-
-    			particle_maker_wire_enabled = '1',
-    			particle_maker_wire_colour = '0',
-    			particle_maker_wire_basic = '1',
-    			particle_maker_wire_effects = '0',
-    			particle_maker_wire_advanced = '0'
+    			particle_maker_StickEndAlpha = '0'
     		}
     	},
     	cvars = {
@@ -109,13 +103,7 @@ SirQuack.ParticleMaker.getPresetOptions = function()
     		"particle_maker_StickStartSize",
     		"particle_maker_StickEndSize",
     		"particle_maker_StickStartAlpha",
-    		"particle_maker_StickEndAlpha",
-
-    		"particle_maker_wire_enabled",
-    		"particle_maker_wire_colour",
-    		"particle_maker_wire_basic",
-    		"particle_maker_wire_effects",
-    		"particle_maker_wire_advanced"
+    		"particle_maker_StickEndAlpha"
     	}
     }
 end
