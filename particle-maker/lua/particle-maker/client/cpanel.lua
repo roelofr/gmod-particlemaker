@@ -22,28 +22,24 @@ SirQuack.ParticleMaker.controlPanel = function(CPanel)
 	-- MAIN HEADER
 	CPanel:Help("#tool.particle_maker.desc")
 
-    SirQuack.ParticleMaker.runOnce(CPanel)
-
     --[[
         PRESETS
     ]]
 
-    local frm = vgui.Create("DForm", CPanel)
-    frm:SetLabel("#tool.particle_maker.hdr.presets")
-
-    CPanel:AddPanel(frm)
-
-    local ctrl = vgui.Create("ControlPresets", frm)
+    local ctrl = vgui.Create("ControlPresets", horDiv)
 
     ctrl:SetPreset( PresetOptions.folder )
 
     for k, v in pairs( PresetOptions.options ) do ctrl:AddOption( k, v ) end
     for k, v in pairs( PresetOptions.cvars ) do ctrl:AddConVar( k, v ) end
 
-    frm:AddItem(ctrl)
+    CPanel:AddItem(ctrl)
 
-    frm:SizeToContentsY()
-    frm:InvalidateLayout()
+    --[[
+        LATEST NEWS
+    ]]
+
+    SirQuack.ParticleMaker.runOnce(CPanel)
 
     --[[
         GENERIC SETTINGS
@@ -155,8 +151,13 @@ SirQuack.ParticleMaker.controlPanel = function(CPanel)
 
     CPanel:AddPanel(frm)
 
-    -- Show that Wiremod is required for this section
-    frm:ControlHelp("#tool.particle_maker.wire.required")
+    if not SirQuack.ParticleMaker.hasWiremod() then
+
+        frm:Help("#tool.particle_maker.wire.not_installed")
+
+        frm:Button("#tool.particke_maker.wire.workshop")
+            .DoClick = function() steamworks.ViewFile(160250458) end
+    end
 
     -- Allow wire inputs?
     local chkWire = frm:CheckBox(
@@ -169,19 +170,29 @@ SirQuack.ParticleMaker.controlPanel = function(CPanel)
         "#tool.particle_maker.wireAdvanced",
         "particle_maker_WireAdvanced"
     )
+
     frm:ControlHelp("#tool.particle_maker.wireAdvanced.help")
+
+    -- Disable if wiremod is not installed
+    if not SirQuack.ParticleMaker.hasWiremod() then
+
+        timer.Simple(0.1, function()
+            chkWire.Button:SetChecked(false)
+            chkWireAdvanced.Button:SetChecked(false)
+
+            chkWire.Button.m_bValue = false
+            chkWireAdvanced.Button.m_bValue = false
+        end)
+
+        chkWire.Button:SetEnabled(false)
+        chkWireAdvanced.Button:SetEnabled(false)
+
+        chkWire.Label.DoClick = function() end
+        chkWireAdvanced.Label.DoClick = function() end
+    end
 
     frm:SizeToContentsY()
     frm:InvalidateLayout()
-
-    -- Disable if wiremod is not installed
-    if SirQuack.ParticleMaker.hasWiremod() then
-        frm:SetExpanded(false)
-        chkWire:SetChecked(false)
-        chkWire:SetEnabled(false)
-        chkWireAdvanced:SetChecked(false)
-        chkWireAdvanced:SetEnabled(false)
-    end
 
     --[[
         EFFECT SETTINGS
@@ -402,11 +413,23 @@ SirQuack.ParticleMaker.controlPanel = function(CPanel)
     ]]
 
     -- Enforce valid rules
+    chkWire.OnChange = function()
+        if not chkWire:GetChecked() then
+            chkWireAdvanced:SetChecked( false )
+        end
+    end
+
+    chkWireAdvanced.OnChange = function()
+        if chkWireAdvanced:GetChecked() then
+            chkWire:SetChecked( true )
+        end
+    end
+
     _cld.OnChange = function()
         if not _cld:GetChecked() then
             _sld:SetChecked( false )
         end
-    end;
+    end
 
     _sld.OnChange = function()
         if _sld:GetChecked() then
