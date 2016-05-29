@@ -48,7 +48,7 @@ grown to love.
 --
 -- @returns Boolean
 --
-SirQuack.ParticleMaker.runOnce = function(dermaPanel)
+SirQuack.ParticleMaker.changelog = function(dermaPanel)
     local versionConvar = GetConVar("particle_maker_version")
     local runOnceConvar = GetConVar("particle_maker_runonce_version")
 

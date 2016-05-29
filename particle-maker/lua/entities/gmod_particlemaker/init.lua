@@ -15,9 +15,12 @@
  * limitations under the License.
  */
 
+
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
+
+DEFINE_BASECLASS( "base_gmodentity" )
 
 function ENT:Initialize()
 	self:SetModel( "models/items/combine_rifle_ammo01.mdl" )
@@ -25,12 +28,9 @@ function ENT:Initialize()
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )
 
-	local phys = self:GetPhysicsObject()
-
-	self.PhysgunDisabled = false
+    self:SetOverlayText( "#tool.particle_maker.name" )
 
 	self.Firing = false
-
 end
 
 function ENT:SetToggle(b)

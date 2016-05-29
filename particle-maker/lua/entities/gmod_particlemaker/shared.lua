@@ -15,8 +15,7 @@
  * limitations under the License.
  */
 
-ENT.Type 		= "anim"
-ENT.Base 		= "base_gmodentity"
+DEFINE_BASECLASS( "base_gmodentity" )
 
 ENT.PrintName	= "Particle Maker"
 ENT.Author		= "SirQuack"
@@ -24,4 +23,8 @@ ENT.Contact		= "https://github.com/roelofr/GMod-ParticleMaker"
 
 function ENT:SetupDataTables()
     SirQuack.ParticleMaker.assignNetworkVars(self)
+end
+
+function ENT:GetData()
+    return SirQuack.ParticleMaker.Read(self)
 end

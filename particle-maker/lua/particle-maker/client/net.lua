@@ -36,6 +36,41 @@ net.Receive( "ParticleMakerError", function( length )
         )
 end )
 
+local lastReceiveTime = 0
+
+net.Receive("ParticleMakerData", function( length )
+    local sendTime = net.ReadInt(32)
+
+    if sendTime <= lastReceiveTime then return end
+
+    lastReceiveTime = sendTime
+
+    local data = net.ReadTable()
+
+    for _, v in pairs(data) do
+        local convarName = "particle_maker_" .. v.Name
+
+        if ConVarExists( convarName ) then
+            convar = GetConVar( convarName )
+
+            print(string.format(
+                'Going to set convar "%s" to "%s"...',
+                convarName, v.Value
+            ))
+
+            if v.Type == "Bool" then
+                convar:SetBool(v.Value)
+            elseif v.Type == "Float" then
+                convar:SetFloat(v.Value)
+            elseif v.Type == "Int" then
+                convar:SetInt(v.Value)
+            else
+                convar:SetString(tostring(v.Value))
+            end
+        end
+    end
+end)
+
 local lastReceivedDupeError = 0
 net.Receive( "ParticleMakerDupe", function( length )
 	if lastReceivedDupeError == nil or lastReceivedDupeError < RealTime() - 10 then

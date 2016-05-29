@@ -18,8 +18,9 @@
 include('shared.lua')
 
 ENT.Spawnable			= false
-ENT.AdminSpawnable		= false
-ENT.RenderGroup 		= RENDERGROUP_OPAQUE
+ENT.RenderGroup 		= RENDERGROUP_BOTH
+
+DEFINE_BASECLASS( "base_gmodentity" )
 
 function ENT:Initialize()
 	self.Entity.NextShot = CurTime()
@@ -37,11 +38,13 @@ function ENT:Draw()
 		if ( wep:GetClass() == "gmod_camera" ) then return end
 	end
 
-	self:DrawModel()
+	BaseClass.Draw( self, true )
 
 end
 
 function ENT:Think()
+
+    self.BaseClass.Think( self )
 
 	if self.Entity:GetNetworkedBool("Activated") and not self.Entity.isActive then
 		local Pos = self.Entity:GetPos() + self.Entity:GetUp() * 4

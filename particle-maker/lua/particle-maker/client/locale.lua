@@ -45,94 +45,28 @@ local function parseProperiesFile(path)
     return result
 end
 
-local function registerLanguage()
-    // Generated with get-locales.php
-    local localeLinks = {
-        {"Нова игра", "bg"},
-        {"Spustit novou hru", "cs"},
-        {"Start nyt spil", "da"},
-        {"Neues Spiel starten", "de"},
-        {"Έναρξη νέου παιχνιδιού", "el"},
-        {"Start New Game", "en"},
-        {"Sail upon a quest", "en-PT"},
-        {"Comenzar nueva partida", "es-ES"},
-        {"Alusta Uut Mängu", "et"},
-        {"Aloita Uusi Peli", "fi"},
-        {"Commencer une nouvelle partie", "fr"},
-        {"התחל משחק חדש", "he"},
-        {"Započni Novu Igru", "hr"},
-        {"Új játék indítása", "hu"},
-        {"Avvia Nuova Partita", "it"},
-        {"新しいゲームを開始", "ja"},
-        {"새로운 게임 시작", "ko"},
-        {"Pradėti naują žaidimą", "lt"},
-        {"Start een nieuw spel", "nl"},
-        {"Start nytt spill", "no"},
-        {"Rozpocznij Nową Grę", "pl"},
-        {"Iniciar novo jogo", "pt-BR"},
-        {"Começar Novo Jogo", "pt-PT"},
-        {"Начать новую игру", "ru"},
-        {"Nová hra", "sk"},
-        {"Starta nytt spel", "sv-SE"},
-        {"เริ่มเกมใหม่", "th"},
-        {"Yeni Bir Oyun Başlat", "tr"},
-        {"Нова гра", "uk"},
-        {"Bắt đầu trò chơi mới", "vi"},
-        {"开始新游戏", "zh-CN"},
-        {"開始新遊戲", "zh-TW"}
-    }
+local localeConvar = GetConVar('gmod_language')
+local currentLocal = localeConvar:GetString()
+local languageFile = 'resource/localization/%s/particlemaker.properties'
 
-    local currentText = language.GetPhrase('new_game');
-    local currentLocal = 'en'
-    local languageFile = 'resource/localization/%s/particlemaker.properties'
+-- Locales unavailable, abort.
+if string.len(currentLocal) == '' then currentLocal = 'en' end
 
-    -- Locales unavailable, abort.
-    if currentText == "new_game" then return end
+local baseLangPath = string.format(languageFile, 'en')
+local userLangPath = string.format(languageFile, currentLocal)
 
-    for _, test in pairs(localeLinks) do
-        if test[1] == currentText then
-            currentLocal = test[2]
-            break
-        end
-    end
+if not file.Exists(baseLangPath, 'GAME') then return end
 
-    local baseLangPath = string.format(languageFile, 'en')
-    local userLangPath = string.format(languageFile, currentLocal)
+local strings = {}
 
-    if not file.Exists(baseLangPath, 'GAME') then
-        Error(
-            'Base locale file of Particle Maker not found!'
-        )
-    end
+-- Load the template string, the user language will override these but this
+-- prevents ugly non-translated strings from showing up.
+table.Merge(strings, parseProperiesFile(baseLangPath))
 
-    local strings = {}
-
-    -- Load the template string, the user language will override these but this
-    -- prevents ugly non-translated strings from showing up.
-    table.Merge(strings, parseProperiesFile(baseLangPath))
-
-    if currentLocal != 'en' and file.Exists(userLangPath, 'GAME') then
-        table.Merge(strings, parseProperiesFile(userLangPath))
-    end
-
-    for key, val in pairs(strings) do
-        language.Add(key, val)
-    end
+if currentLocal != 'en' and file.Exists(userLangPath, 'GAME') then
+    table.Merge(strings, parseProperiesFile(userLangPath))
 end
 
--- Run registration upon initialisation
-hook.Add(
-    "Initialise",
-    "ParticleMaker_Initialise_Locales",
-    registerLanguage
-)
-
--- Run registration upon entity ready
-hook.Add(
-    "InitPostEntity",
-    "ParticleMaker_InitPostEntity_Locales",
-    registerLanguage
-)
-
--- Run it now too, to fix issue #4
-registerLanguage()
+for key, val in pairs(strings) do
+    language.Add(key, val)
+end

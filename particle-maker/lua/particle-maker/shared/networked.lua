@@ -23,16 +23,16 @@ SirQuack.ParticleMaker.assignNetworkVars = function(ent)
     ent:NetworkVar( "Bool", 1, "ActiveWire" )
     ent:NetworkVar( "Bool", 2, "Toggle" )
 
-    ent:NetworkVar( "String", 0, "Material" )
+    ent:NetworkVar( "String", 0, "ParticleMaterial" )
 
     ent:NetworkVar( "Vector", 0, "Color1" )
     ent:NetworkVar( "Vector", 1, "Color2" )
     ent:NetworkVar( "Bool", 3, "ColorRand" )
 
-    ent:NetworkVar( "Float", 0, "Velocity" )
+    ent:NetworkVar( "Float", 0, "ParticleVelocity" )
     ent:NetworkVar( "Float", 1, "Spread" )
     ent:NetworkVar( "Float", 2, "Delay" )
-    ent:NetworkVar( "Int", 0, "Number" )
+    ent:NetworkVar( "Int", 0, "ParticleCount" )
     ent:NetworkVar( "Float", 3, "DieTime" )
     ent:NetworkVar( "Float", 4, "StartAlpha" )
     ent:NetworkVar( "Float", 0, "EndAlpha" )
@@ -60,6 +60,5 @@ SirQuack.ParticleMaker.assignNetworkVars = function(ent)
     ent:NetworkVar( "Float", 17, "StickStartAlpha" )
     ent:NetworkVar( "Float", 18, "StickEndAlpha" )
 
-    ent:NetworkVar( "Bool", 11, "WireEnabled" )
-    ent:NetworkVar( "Bool", 12, "WireAdvanced" )
+    ent:NetworkVar( "Int", 1, "WireMode" )
 end

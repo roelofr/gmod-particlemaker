@@ -18,6 +18,8 @@
 --[[
     Initialises the numpad bindings
 ]]
+if not SirQuack then SirQuack = {} end
+if not SirQuack.ParticleMaker then SirQuack.ParticleMaker = {} end
 
 local validClasses = {
     ["gmod_particlemaker"] = true,
@@ -34,6 +36,8 @@ end
 local function ParticleMakerOn(Ply, Ent)
     if not validParticleMaker(Ent) then return end
 
+    print("BORK!!! ParticleMakerOn")
+
     if Ent:GetToggle() then
         Ent:SetOn( 'key', Ent.Firing )
     else
@@ -44,22 +48,36 @@ end
 local function ParticleMakerOff(Ply, Ent)
     if not validParticleMaker(Ent) then return end
 
+    print("BORK!!! ParticleMakerOff")
+
     if not Ent:GetToggle() then
         Ent:SetOn( 'key', false )
     end
 end
 
-local function initNumpadHelpers()
+local registered = false
+SirQuack.ParticleMaker.bindNumpad = function()
+    if registered then return end
+    registered = true
 
-    if not GM.IsSandboxDerived then return end
-
-    numpad.Register("Particles_On", ParticleMakerOn)
-    numpad.Register("Particles_Off", ParticleMakerOff)
-
+    -- Try to register the numpad, fail if you can't
+    timer.Create('ParticleMaker_Timer_Numpad', 1, 5, function()
+        if numpad and numpad.Register then
+            numpad.Register("Particles_On", ParticleMakerOn)
+            numpad.Register("Particles_Off", ParticleMakerOff)
+            timer.Remove("ParticleMaker_Timer_Numpad")
+        end
+    end)
 end
 
 hook.Add(
-    "Initialise",
-    "ParticleMaker_Initialise_Numpad",
-    initNumpadHelpers
+    "InitPostEntity",
+    "ParticleMaker_InitPostEntity_Numpad",
+    SirQuack.ParticleMaker.bindNumpad
+)
+
+hook.Add(
+    "Initialize",
+    "ParticleMaker_Initialize_Numpad",
+    SirQuack.ParticleMaker.bindNumpad
 )

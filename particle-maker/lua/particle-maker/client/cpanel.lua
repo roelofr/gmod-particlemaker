@@ -26,12 +26,14 @@ SirQuack.ParticleMaker.controlPanel = function(CPanel)
         PRESETS
     ]]
 
+    local presetOptions = SirQuack.ParticleMaker.getPresetOptions()
+
     local ctrl = vgui.Create("ControlPresets", horDiv)
 
-    ctrl:SetPreset( PresetOptions.folder )
+    ctrl:SetPreset( presetOptions.folder )
 
-    for k, v in pairs( PresetOptions.options ) do ctrl:AddOption( k, v ) end
-    for k, v in pairs( PresetOptions.cvars ) do ctrl:AddConVar( k, v ) end
+    for k, v in pairs( presetOptions.options ) do ctrl:AddOption( k, v ) end
+    for k, v in pairs( presetOptions.cvars ) do ctrl:AddConVar( k, v ) end
 
     CPanel:AddItem(ctrl)
 
@@ -39,7 +41,7 @@ SirQuack.ParticleMaker.controlPanel = function(CPanel)
         LATEST NEWS
     ]]
 
-    SirQuack.ParticleMaker.runOnce(CPanel)
+    SirQuack.ParticleMaker.changelog(CPanel)
 
     --[[
         GENERIC SETTINGS
@@ -177,11 +179,8 @@ SirQuack.ParticleMaker.controlPanel = function(CPanel)
     if not SirQuack.ParticleMaker.hasWiremod() then
 
         timer.Simple(0.1, function()
-            chkWire.Button:SetChecked(false)
-            chkWireAdvanced.Button:SetChecked(false)
-
-            chkWire.Button.m_bValue = false
-            chkWireAdvanced.Button.m_bValue = false
+            chkWire:SetValue(false)
+            chkWireAdvanced:SetValue(false)
         end)
 
         chkWire.Button:SetEnabled(false)
@@ -415,71 +414,71 @@ SirQuack.ParticleMaker.controlPanel = function(CPanel)
     -- Enforce valid rules
     chkWire.OnChange = function()
         if not chkWire:GetChecked() then
-            chkWireAdvanced:SetChecked( false )
+            chkWireAdvanced:SetValue( false )
         end
     end
 
     chkWireAdvanced.OnChange = function()
         if chkWireAdvanced:GetChecked() then
-            chkWire:SetChecked( true )
+            chkWire:SetValue( true )
         end
     end
 
     _cld.OnChange = function()
         if not _cld:GetChecked() then
-            _sld:SetChecked( false )
+            _sld:SetValue( false )
         end
     end
 
     _sld.OnChange = function()
         if _sld:GetChecked() then
-            _cld:SetChecked( true )
-            _3ds:SetChecked( false )
-            _3da:SetChecked( false )
+            _cld:SetValue( true )
+            _3ds:SetValue( false )
+            _3da:SetValue( false )
         end
     end
 
     _3d.OnChange = function()
         if not _3d:GetChecked() then
-            _3dt:SetChecked( false )
-            _3ds:SetChecked( false )
-            _3da:SetChecked( false )
+            _3dt:SetValue( false )
+            _3ds:SetValue( false )
+            _3da:SetValue( false )
         end
     end
 
     _3dt.OnChange = function()
         if _3dt:GetChecked() then
-            _3d:SetChecked( true )
+            _3d:SetValue( true )
         end
     end
 
     _3ds.OnChange = function()
         if _3ds:GetChecked() then
-            _3d:SetChecked( true )
-            _sld:SetChecked( false )
+            _3d:SetValue( true )
+            _sld:SetValue( false )
         end
     end
 
     _3da.OnChange = function()
         if _3da:GetChecked() then
-            _3d:SetChecked( true )
-            _3ds:SetChecked( true )
-            _sld:SetChecked( false )
+            _3d:SetValue( true )
+            _3ds:SetValue( true )
+            _sld:SetValue( false )
         end
     end
 
     if not _3d:GetChecked() then
-        _3dt:SetChecked( false )
-        _3ds:SetChecked( false )
-        _3da:SetChecked( false )
+        _3dt:SetValue( false )
+        _3ds:SetValue( false )
+        _3da:SetValue( false )
     end
 
     if not _cld:GetChecked() then
-        _sld:SetChecked( false )
+        _sld:SetValue( false )
     end
 
     if _sld:GetChecked() then
-        _3ds:SetChecked( false )
-        _3da:SetChecked( false )
+        _3ds:SetValue( false )
+        _3da:SetValue( false )
     end
 end

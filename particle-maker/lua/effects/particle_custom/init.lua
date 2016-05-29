@@ -77,10 +77,8 @@ function EFFECT:Think()
 
 	if not Ent.Success and Ent:IsValid() then
 		Ent.Success = true
-		Ent["3D"] = Ent:GetNWBool( "3D" )
 		Ent.Ready = true
-
-		Ent.Emitter = ParticleEmitter(Ent.Pos, Ent["3D"])
+		Ent.Emitter = ParticleEmitter(Ent.Pos, Ent:Get3D())
 	end
 
 	if Ent.Ready then

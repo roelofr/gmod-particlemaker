@@ -18,293 +18,338 @@
 if not SirQuack then SirQuack = {} end
 if not SirQuack.ParticleMaker then SirQuack.ParticleMaker = {} end
 
-SirQuack.ParticleMaker.getParticleOptions = function()
+SirQuack.ParticleMaker.getOptions = function()
     return {
 	{
         Name = "Material",
         Type = "String",
-        Value = ""
+        Preset = true,
+        Default = "",
     },
 	{
         Name = "ColorR1",
         Type = "Float",
-        Value = 255,
+        Preset = true,
+        Default = 255,
         Min = 0,
         Max = 255
     },
 	{
         Name = "ColorG1",
         Type = "Float",
-        Value = 255,
+        Preset = true,
+        Default = 255,
         Min = 0,
         Max = 255
     },
 	{
         Name = "ColorB1",
         Type = "Float",
-        Value = 255,
+        Preset = true,
+        Default = 255,
         Min = 0,
         Max = 255
     },
 	{
         Name = "ColorR2",
         Type = "Float",
-        Value = 255,
+        Preset = true,
+        Default = 255,
         Min = 0,
         Max = 255
     },
 	{
         Name = "ColorG2",
         Type = "Float",
-        Value = 255,
+        Preset = true,
+        Default = 255,
         Min = 0,
         Max = 255
     },
 	{
         Name = "ColorB2",
         Type = "Float",
-        Value = 255,
+        Preset = true,
+        Default = 255,
         Min = 0,
         Max = 255
     },
 	{
         Name = "ColorRand",
         Type = "Bool",
-        Value = 0,
-        Min = 0,
-        Max = 1
+        Preset = true,
+        Default = false
     },
 	{
         Name = "Velocity",
         Type = "Float",
-        Value = 500.01,
+        Preset = true,
+        Default = 500.01,
         Min = 0,
         Max = 10000
     },
 	{
         Name = "Spread",
         Type = "Float",
-        Value = 50,
+        Preset = true,
+        Default = 50,
         Min = 0,
         Max = 360
     },
 	{
         Name = "Delay",
         Type = "Float",
-        Value = 0.2,
+        Preset = true,
+        Default = 0.2,
         Min = 0.1,
         Max = 10
     },
 	{
         Name = "Number",
         Type = "Int",
-        Value = 1,
+        Preset = true,
+        Default = 1,
         Min = 1,
         Max = 10
     },
 	{
         Name = "DieTime",
         Type = "Float",
-        Value = 3,
+        Preset = true,
+        Default = 3,
         Min = 0,
         Max = 10
     },
 	{
         Name = "StartAlpha",
         Type = "Float",
-        Value = 255,
+        Preset = true,
+        Default = 255,
         Min = 0,
         Max = 255
     },
 	{
         Name = "EndAlpha",
         Type = "Float",
-        Value = 0,
+        Preset = true,
+        Default = 0,
         Min = 0,
         Max = 255
     },
 	{
         Name = "StartSize",
         Type = "Float",
-        Value = 10,
+        Preset = true,
+        Default = 10,
         Min = 0,
         Max = 100
     },
 	{
         Name = "EndSize",
         Type = "Float",
-        Value = 20,
+        Preset = true,
+        Default = 20,
         Min = 0,
         Max = 100
     },
 	{
         Name = "StartLength",
         Type = "Float",
-        Value = 0,
+        Preset = true,
+        Default = 0,
         Min = 0,
         Max = 100
     },
 	{
         Name = "EndLength",
         Type = "Float",
-        Value = 0,
+        Preset = true,
+        Default = 0,
         Min = 0,
         Max = 100
     },
 	{
         Name = "RollRand",
         Type = "Float",
-        Value = 0,
+        Preset = true,
+        Default = 0,
         Min = 0,
         Max = 10
     },
 	{
         Name = "RollDelta",
         Type = "Float",
-        Value = 0,
+        Preset = true,
+        Default = 0,
         Min = -10,
         Max = 10
     },
 	{
         Name = "AirResistance",
         Type = "Float",
-        Value = 5,
+        Preset = true,
+        Default = 5,
         Min = 0,
         Max = 1000
     },
 	{
         Name = "Bounce",
         Type = "Float",
-        Value = 0.2,
+        Preset = true,
+        Default = 0.2,
         Min = 0,
         Max = 10
     },
 	{
         Name = "Gravity",
         Type = "Float",
-        Value = -50,
+        Preset = true,
+        Default = -50,
         Min = -1000,
         Max = 1000
     },
 	{
         Name = "Collide",
         Type = "Bool",
-        Value = 1,
-        Min = 0,
-        Max = 1
+        Preset = true,
+        Default = true
     },
 	{
         Name = "Lighting",
         Type = "Bool",
-        Value = 0,
-        Min = 0,
-        Max = 1
+        Preset = true,
+        Default = false
     },
 	{
         Name = "Sliding",
         Type = "Bool",
-        Value = 0,
-        Min = 0,
-        Max = 1
+        Preset = true,
+        Default = false
     },
 
 	{
         Name = "3D",
         Type = "Bool",
-        Value = 0,
-        Min = 0,
-        Max = 1
+        Preset = true,
+        Default = false
     },
 	{
         Name = "Align",
         Type = "Bool",
-        Value = 1,
-        Min = 0,
-        Max = 1
+        Preset = true,
+        Default = true
     },
 	{
         Name = "Stick",
         Type = "Bool",
-        Value = 1,
-        Min = 0,
-        Max = 1
+        Preset = true,
+        Default = true
     },
 	{
         Name = "DoubleSided",
         Type = "Bool",
-        Value = 1,
-        Min = 0,
-        Max = 1
+        Preset = true,
+        Default = true
     },
 	{
         Name = "AngleVelX",
         Type = "Float",
-        Value = 50,
+        Preset = true,
+        Default = 50,
         Min = -500,
         Max = 500
     },
 	{
         Name = "AngleVelY",
         Type = "Float",
-        Value = 50,
+        Preset = true,
+        Default = 50,
         Min = -500,
         Max = 500
     },
 	{
         Name = "AngleVelZ",
         Type = "Float",
-        Value = 50,
+        Preset = true,
+        Default = 50,
         Min = -500,
         Max = 500
     },
 	{
         Name = "StickLifeTime",
         Type = "Float",
-        Value = 2,
+        Preset = true,
+        Default = 2,
         Min = 0.01,
         Max = 10
     },
 	{
         Name = "StickStartSize",
         Type = "Float",
-        Value = 20,
+        Preset = true,
+        Default = 20,
         Min = 0,
         Max = 100
     },
 	{
         Name = "StickEndSize",
         Type = "Float",
-        Value = 0,
+        Preset = true,
+        Default = 0,
         Min = 0,
         Max = 100
     },
 	{
         Name = "StickStartAlpha",
         Type = "Float",
-        Value = 255,
+        Preset = true,
+        Default = 255,
         Min = 0,
         Max = 255
     },
 	{
         Name = "StickEndAlpha",
         Type = "Float",
-        Value = 0,
+        Preset = true,
+        Default = 0,
         Min = 0,
         Max = 255
     },
 	{
+        Name = "Toggle",
+        Type = "Bool",
+        Preset = false,
+        Default = false
+    },
+	{
+        Name = "Weld",
+        Type = "Bool",
+        Preset = false,
+        Default = false
+    },
+	{
+        Name = "Frozen",
+        Type = "Bool",
+        Preset = false,
+        Default = false
+    },
+	{
+        Name = "Key",
+        Type = "Int",
+        Preset = false,
+        Default = 5
+    },
+	{
         Name = "Wire",
         Type = "Bool",
-        Value = 0,
-        Min = 0,
-        Max = 1
+        Preset = false,
+        Default = false
     },
 	{
         Name = "WireAvanced",
         Type = "Bool",
-        Value = 0,
-        Min = 0,
-        Max = 1
+        Preset = false,
+        Default = false
     }
 }
 end

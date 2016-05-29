@@ -15,26 +15,29 @@
  * limitations under the License.
  */
 
+DEFINE_BASECLASS( "base_gmodentity" )
+
 TOOL.Category		= "Construction"
 TOOL.Name			= "#tool.particle_maker.name"
 TOOL.Command		= nil
 TOOL.ConfigName		= ""
 
 -- These convars are not part of any preset, so are defined here.
-TOOL.ClientConVar["Weld"]	= "1"
-TOOL.ClientConVar["Frozen"]	= "1"
+TOOL.GhostEntities = {}
 
-TOOL.ClientConVar["Key"]	= "5"
-TOOL.ClientConVar["Toggle"]	= "0"
+-- Register numpad
+SirQuack.ParticleMaker.bindNumpad()
 
-ParticleOptions = SirQuack.ParticleMaker.getParticleOptions()
-PresetOptions = SirQuack.ParticleMaker.getPresetOptions()
-
-local _HasWiremod = SirQuack.ParticleMaker.hasWiremod()
+-- Get all options
+local particleOptions = SirQuack.ParticleMaker.getOptions()
 
 -- Add all settings
-for _,v in pairs(ParticleOptions) do
-	TOOL.ClientConVar[v.Name] = v.Value
+for _,v in pairs(particleOptions) do
+    if v.Type == "Bool" then
+        TOOL.ClientConVar[v.Name] = v.Value and 1 or 0
+    else
+        TOOL.ClientConVar[v.Name] = v.Default
+    end
 end
 
 cleanup.Register("particle_makers")
@@ -42,136 +45,117 @@ CreateConVar("sbox_maxparticle_makers", 1, FCVAR_NOTIFY)
 CreateConVar("particle_maker_Clamp", 1, FCVAR_NOTIFY)
 
 function TOOL:BoolToNum(Data)
-	local NewData = Data
-	for k,v in pairs(NewData) do
-		if (type(v) == "boolean") then
-			if (v) then
-				NewData[k] = 1
-			else
-				NewData[k] = 0
-			end
+	local newdata = data
+	for k,v in pairs(newdata) do
+		if type(v) == "boolean" then
+			newdata[k] = v and 1 or 0
 		end
 	end
 
-	return NewData
+	return newdata
 end
 
-function TOOL:GetNetworkedValues(Ent)
-	local Data = Ent:GetData(ParticleOptions)
-	Data = Ent:BoolToNum(Data)
-
-	return Data
+function TOOL:GetNetworkedValues(ent)
+	local data = SirQuack.ParticleMaker.Read(ent)
+	return self:BoolToNum(data)
 end
 
-function TOOL:GetValues()
-	local Data = {}
+function TOOL:GetUserValues()
+	local data, value, valueS = {}, nil, nil
 
-	for k,v in pairs(ParticleOptions) do
-		Data[k] = {}
-
+	for k,v in pairs(particleOptions) do
 		if (v.Type == "String") then
-			Data[k].Value = self:GetClientInfo(v.Name)
+			value = self:GetClientInfo(v.Name)
 		elseif (v.Type == "Bool") then
-			Data[k].Value = util.tobool(self:GetClientNumber(v.Name))
+			value = self:GetClientNumber(v.Name) == 1
 		else
-			local Value = self:GetClientNumber(v.Name)
-			if not game.SinglePlayer() and util.tobool(GetConVarNumber("particle_maker_Clamp")) then
-				-- Clamp stuff in multiplayer.. because people are idiots T_T
-				Value = math.Clamp(Value, v.Min, v.Max)
+			value = self:GetClientNumber(v.Name)
+
+            -- Always clamp in multiplayer
+			if not game.SinglePlayer() and v.Min and v.Max then
+				value = math.Clamp(value, v.Min, v.Max)
 			end
+        end
 
-			Data[k].Value = Value
-		end
+        print(string.format(
+            'For %s\t%s -> %s', v.Name, self:GetClientInfo(v.Name), value
+        ))
 
-		Data[k].Type = v.Type
-		Data[k].Name = v.Name
+        table.insert(data, {
+    		Type = v.Type,
+    		Name = v.Name,
+            Value = value
+        })
 	end
 
-	return Data
+	return data
 end
 
-local function SetValues(Ent, Data, Toggle)
-	if (type(Data) == "table") then
-		local PMTable = Ent:GetTable()
-
-		PMTable:SetToggle(Toggle)
-
-        SirQuack.ParticleMaker.entitySet(Ent, Data)
-
-		PMTable:UpdateInputs()
-	end
-
-	-- duplicator.StoreEntityModifier(Ent, "particle_maker", Data)
-end
--- duplicator.RegisterEntityModifier("particle_maker", SetValues)
-
-function TOOL:LeftClick( trace )
+function TOOL:LeftClick(trace)
 	if trace.Entity and trace.Entity:IsPlayer() then return false end
 
-	if SERVER and !util.IsValidPhysicsObject( trace.Entity, trace.PhysicsBone )
-    then return false end
-
+    -- The creation is done server-side, prediction is complete
 	if CLIENT then return true end
 
-	local ply = self:GetOwner()
-	local _3d = self:GetClientNumber("3D") == 1
-	local toggle = self:GetClientNumber("Toggle") == 1
-	local key = self:GetClientNumber("Key")
-	local data = self:GetValues()
-
-    PrintTable(data)
-
-	local material = self:GetClientInfo("Material")
-
-	if material == nil or material == NULL or string.len( material ) == 0 then
-		net.Start( "ParticleMakerError" )
-			net.WriteString( "#tool.particle_maker.error.no_material" )
-		net.Send( ply )
-		return false
-	end
-
-	local keyAsNum = tonumber( key )
-
-    if key == nil or key == NULL or keyAsNum <= 0 then
-        key = false
+    -- Make sure we're doing something legal
+    if not util.IsValidPhysicsObject( trace.Entity, trace.PhysicsBone ) then
+        return false
     end
 
-    if not key and not _HasWiremod then
+    -- Get config
+	local ply = self:GetOwner()
+	local data = self:GetUserValues()
+
+    -- Retrieve a couple of useful keys
+	local material = self:GetClientInfo('Material')
+    local wireOn = self:GetClientInfo('Wire') == 1
+
+    -- We really do need a material
+	if material == nil or material == NULL or string.len( material ) == 0 then
 		net.Start( "ParticleMakerError" )
-			net.WriteString( "#tool.particle_maker.error.input" )
+			net.WriteString( "#tool.particle_maker.error.material" )
 		net.Send( ply )
 		return false
 	end
 
 	-- We shot an existing particle maker - just change its values
 	if
-        SirQuack.ParticleMaker.IsValid(trace.Entity) and
+        trace.Entity:IsValid() and
+        trace.Entity:GetClass() == "gmod_particlemaker" and
         trace.Entity:GetPlayer() == ply
     then
-		SetValues(trace.Entity, data, toggle)
-		//trace.Entity:GetWiremodSettings(data)
+		SirQuack.ParticleMaker.Write(trace.Entity, data)
 		DoPropSpawnedEffect(trace.Entity)
 		return true
 	end
 
+    -- Check if the user idn't hit the limit
 	if not self:GetSWEP():CheckLimit("particle_makers") then return false end
 
-	local _entity = MakeParticle( ply, trace.HitPos, data, toggle, key, _3d )
-
+    -- Get position and angles
+    local pos = trace.HitPos
 	local angle = trace.HitNormal:Angle()
 	angle:RotateAroundAxis( angle:Right(), -90 )
 
-	_entity:SetAngles( angle )
+    -- Create the object
+	local entity = SirQuack.ParticleMaker.Add( ply, angle, pos, data )
 
+    -- Do we want to build a snowman?
+    if self:GetClientNumber("Frozen") == 1 then
+        entity:GetPhysicsObject():EnableMotion(false)
+    end
+
+    -- Weld if requested, weld to world too
 	local weld
-	if Trace.Entity:IsValid() then
-		if self:GetClientNumber("Weld") == 1 then
-			weld = constraint.Weld(_entity, trace.Entity, 0, trace.PhysicsBone, 0, 0, true)
+	if self:GetClientNumber("Weld") == 1 then
+        if trace.Entity:IsValid() or trace.Entity:IsWorld() then
+			weld = constraint.Weld(entity, trace.Entity, 0, trace.PhysicsBone, 0, 0, true)
 		end
 	end
 
+    -- Register as undo-able
 	undo.Create("particle_maker")
-		undo.AddEntity(particlemaker)
+		undo.AddEntity(entity)
 		undo.AddEntity(weld)
 		undo.SetPlayer(ply)
 	undo.Finish()
@@ -180,63 +164,87 @@ function TOOL:LeftClick( trace )
 
 end
 
-function TOOL:RightClick(Trace)
-	if Trace.Entity and Trace.Entity:IsPlayer() then return false end
-	if SERVER and not util.IsValidPhysicsObject(Trace.Entity, Trace.PhysicsBone) then return false end
+function TOOL:RightClick(trace)
 
-	if Trace.Entity:IsValid() and Trace.Entity:GetClass() == "gmod_particlemaker" then
-		if CLIENT then return true end
+    -- You shot a player!
+	if trace.Entity and trace.Entity:IsPlayer() then return false end
 
-		local Data = self:GetNetworkedValues(Trace.Entity)
+    -- Check if we hit a particle maker
+    if  not trace.Entity:IsValid() or
+        trace.Entity:GetClass() != "gmod_particlemaker"
+    then return false end
 
-		for _,v in pairs(Data) do
-			local Command = "particle_maker_" .. v.Name
-			if ConVarExists( Command ) then
-				self:GetOwner():ConCommand(Command .. " " .. v.Value)
-			end
-		end
+    -- End of prediction
+	if CLIENT then return true end
 
-		return true
+        -- Check if the physics are sound
+    if !util.IsValidPhysicsObject(trace.Entity, trace.PhysicsBone) then
+        return false
+    end
+
+	local data = SirQuack.ParticleMaker.Read(trace.Entity)
+
+    if not data then
+        return false
+    end
+
+    local convarData = {}
+
+	for _,v in pairs(data) do
+        if self.ClientConVar[v.Name] then
+            table.insert(convarData, v)
+        end
 	end
+
+    //print(string.rep('=', 64))
+    //print('[[ convarData ]]')
+    //PrintTable(convarData)
+    //print(string.rep('-', 64))
+
+    net.Start("ParticleMakerData")
+        net.WriteInt(RealTime(), 32)
+        net.WriteTable(convarData)
+    net.Send( self:GetOwner() )
+
+    return true
 end
 
-if (SERVER) then
+function TOOL:UpdateGhost(ent, ply)
 
-	function TOOL:Think()
-		-- Nothing to see here
-	end
+	if not IsValid( ent ) then return end
 
-	function MakeParticle(Ply, Pos, Data, Toggle, ToggleWiremod, Key, _3D)
+	local trace = util.TraceLine( util.GetPlayerTrace( ply ) )
+	if !trace.Hit then return end
 
-		if not Ply:CheckLimit("particle_makers") then return nil end
+    -- Hide ghost when pointing at a player
+	if trace.Entity and (
+        trace.Entity:IsPlayer() or
+        trace.Entity:GetClass() == "gmod_particlemaker")
+    then
+        ent:SetNoDraw( true )
+        return
+    end
 
-		local ParticleMaker = ents.Create("gmod_particlemaker")
-		if not ParticleMaker:IsValid() then return false end
+    local angle = trace.HitNormal:Angle()
+    angle.pitch = angle.pitch + 90
 
-		ParticleMaker:SetPos(Pos)
-		ParticleMaker:SetPlayer(Ply)
-		ParticleMaker:Spawn()
-		ParticleMaker:Activate()
+    ent:SetNoDraw( false )
+    ent:SetPos( trace.HitPos )
+    ent:SetAngles( angle )
 
-		ParticleMaker:SetOwner(Ply)
-		ParticleMaker:GetWiremodSettings( Data )
+end
 
-		SetValues(ParticleMaker, Data, Toggle, ToggleWiremod)
+function TOOL:Think()
 
-		if (Key) then
-			numpad.OnDown(Ply, Key, "Particles_On", ParticleMaker)
-			numpad.OnUp(Ply, Key, "Particles_Off", ParticleMaker)
-		end
-
-		if (Pos != Vector(0, 0, 0)) then
-			DoPropSpawnedEffect(ParticleMaker)
-		end
-
-		Ply:AddCount("particle_makers", ParticleMaker)
-		Ply:AddCleanup("particle_makers", ParticleMaker)
-
-		return ParticleMaker
-
+    if not SERVER or game.SinglePlayer() then
+        if !IsValid( self.GhostEntity ) then
+    		self:MakeGhostEntity(
+                'models/items/combine_rifle_ammo01.mdl',
+                Vector(0, 0, 0), Angle(0, 0, 0)
+            )
+        else
+            self:UpdateGhost( self.GhostEntity, self:GetOwner() )
+    	end
 	end
 
 end
