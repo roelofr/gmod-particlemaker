@@ -52,6 +52,13 @@ SirQuack.ParticleMaker.runOnce = function(dermaPanel)
     local versionConvar = GetConVar("particle_maker_version")
     local runOnceConvar = GetConVar("particle_maker_runonce_version")
 
+    -- Mangle the changelog a bit
+    local changes = changesThisVersion
+    changes = string.gsub(changes, "\r", '')
+    changes = string.gsub(changes, "(\n\n+)", '[[NEWLINE]]')
+    changes = string.gsub(changes, "\n", ' ')
+    changes = string.gsub(changes, '%[%[NEWLINE%]%]', '\n\n')
+
     local frame = vgui.Create("DForm", dermaPanel)
 
     frame:SetName("#tool.particle_maker.changes")
@@ -61,8 +68,8 @@ SirQuack.ParticleMaker.runOnce = function(dermaPanel)
     dermaPanel:AddItem( frame, nil )
 
     local changelog1 = frame:ControlHelp("#tool.particle_maker.changes.help")
-    local changelog2 = frame:Help(changesThisVersion)
-    local btn = frame:Button("#close")
+    local changelog2 = frame:Help(changes)
+    local btn = frame:Button("#tool.particle_maker.changes.close")
 
     btn.DoClick = function()
         if versionConvar and runOnceConvar then
