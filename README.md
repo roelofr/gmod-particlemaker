@@ -5,31 +5,28 @@ particles as you please.
 
 ## What does it do
 
-The addon does the following, as stated in the old (removed) addon.txt file:
+The Particle Maker is a scripted tool for Garry's Mod that can create
+user-defined particles.
 
-> Particle Maker is a STOOL capable of creating user-defined particles.
->
-> You can create your own particles, set their color, size, sprite, gravity,
-> motion and much more.  This stool is a modification of Robbis_1's Particle
-> Maker to make it work with the new Garry's Mod code.
->
-> Robbis_1 created the base code, I added a lot of tweaks and made it gmod 13
-> compatible.  If you find any bugs (or if any future update causes them), post
-> them on my Steam profile or mail them to roelof@tmg-clan.com.
->
-> Have fun with it.
+The addon has support for [Wiremod][wiremod] and can be controlled by the
+keyboard (using old-school keybindings) and/or via Wiremod inputs.
 
-Note that the mentioned e-mail is no longer being used, as the associated clan
-has since been disbanded. Any issues can be reported using this repository.
+You can create your own particles, set their color, size, sprite, gravity,
+motion and much more.  This stool is a modification of [Robbis_1][robbis1]'s
+Particle Maker to make it work with the new Garry's Mod code.
 
-More information can be found on the [Workshop page][workshop].
+The code since has had a major overhaul and is now multi-lingual and has a
+better, more intuitive interface, where the complexity increases the further
+your scroll downward in the settings.
+
+More information, as well as user questions and discussions can be found on
+[Particle Maker's Workshop page][workshop]. Any code-related bugs and feature
+requests can be placed here using Githubs ticket system.
 
 ## Is it still actively being maintained?
 
-No, the application hasn't been updated in ages and throws errors all over the
-place if used incorrectly. However, since the addon has been interfering with
-[Wiremod][wiremod], I've decided to update it and put the changes on Github, as
-to please the Wiremod overlords.
+Not really, there are no new features on track so it's just bug fixing. New
+features might be added in the future.
 
 # License
 
@@ -60,5 +57,5 @@ an issue to work on, as I can keep track of what's going on that way.
 [workshop]: https://steamcommunity.com/sharedfiles/filedetails/?id=104466547
 [license]: LICENSE
 [wiremod]: https://github.com/wiremod/wire
+[robbis1]: http://steamcommunity.com/profiles/76561197967123461
 [translate-wiki]: https://github.com/roelofr/GMod-ParticleMaker/wiki/Localization
-
