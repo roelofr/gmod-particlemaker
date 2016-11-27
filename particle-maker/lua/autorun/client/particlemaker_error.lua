@@ -17,7 +17,7 @@ limitations under the License.
 
 local properCaps = function(phrase)
     local txt = language.GetPhrase(phrase)
-    return string.upper(string.sub(txt, 1, 2)) .. string.sub(txt, 2)
+    return string.upper(string.sub(txt, 1, 1)) .. string.sub(txt, 2)
 end
 
 
