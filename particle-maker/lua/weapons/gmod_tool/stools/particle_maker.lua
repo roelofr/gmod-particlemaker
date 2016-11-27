@@ -19,6 +19,10 @@ TOOL.Category		= "Construction"
 TOOL.Name			= "#tool.particle_maker.name"
 TOOL.Command		= nil
 TOOL.ConfigName		= ""
+TOOL.Information = {
+    { name = "left" },
+    { name = "right" }
+}
 
 -- The 'default' convars, will always be there
 TOOL.ClientConVar["Weld"]	= "1"

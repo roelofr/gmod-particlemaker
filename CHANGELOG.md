@@ -23,6 +23,7 @@ This is the first version after many years of silence.
   - Locale support
 - **Changed**
   - The UI has been overhauled, to provide easier access to new users.
+  - Instructions are now using the new help system
 - **Fixed**
   - Addon no longer breaks Wiremod
   - Addon no longer errors when turning off the emitter
