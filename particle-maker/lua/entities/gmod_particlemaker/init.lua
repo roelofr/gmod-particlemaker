@@ -159,7 +159,7 @@ function ENT:TriggerInput(Name, Value)
 	else
 		for _,v in pairs(ParticleOptions) do
 			if (Name == v.Name) then
-				if not SinglePlayer() then
+				if not game.SinglePlayer() then
 					-- ALWAYS Clamp stuff in multiplayer.. because people are idiots T_T
 					Value = math.Clamp(Value, v.Min, v.Max)
 				end

@@ -98,8 +98,8 @@ function TOOL:GetValues()
 			Data[k].Value = util.tobool(self:GetClientNumber(v.Name))
 		else
 			local Value = self:GetClientNumber(v.Name)
-			if not game.SinglePlayer() and util.tobool(GetConVarNumber("particle_maker_Clamp")) then
-				-- Clamp stuff in multiplayer.. because people are idiots T_T
+			if not game.SinglePlayer() then
+				-- Always clamp stuff in multiplayer.. because people are idiots T_T
 				Value = math.Clamp(Value, v.Min, v.Max)
 			end
 
