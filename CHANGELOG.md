@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 This is the active-under-development branch.
 
+## Version 2.0.1
+
+Fixes many tiny bugs
+
 - **Changed**
   - The module now enforces active clamping of minimum and maximum values, that cannot be
     disabled. This is because '*the user is evil*' is very true in most multiplayer sessions.
