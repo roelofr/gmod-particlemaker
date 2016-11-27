@@ -145,7 +145,7 @@ function TOOL:LeftClick( Trace )
 
 	if Material == nil or Material == NULL or string.len( Material ) == 0 then
 		net.Start( "ParticleMakerError" )
-			net.WriteString( "#tool.particle_maker.error.no_material" )
+			net.WriteString( "#tool.particle_maker.error.material" )
 		net.Send( Ply )
 		return false
 	end
