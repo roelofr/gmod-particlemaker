@@ -23,24 +23,11 @@ if not SirQuack.ParticleMaker then SirQuack.ParticleMaker = {} end
 -- of the translators.
 
 local changesThisVersion = [[
-After 3 years, there is a new version of the Particle Maker.
+This update includes a lot of bug-fixes:
 
-The following changes are included in this new version:
-The collision with some Wiremod functionality has been removed,
-this should fix any problems you may have had with Expression 2
-and the like.
-
-Furthermore, Wiremod functionality will now be provided automatically,
-given that Wiremod is available. Some features are no longer available
-via Wire (such as velocity modifications). If you do use this, please
-open a ticket on GitHub if you have any improvements on the current
-implementation.
-
-Furthermore, the menu below has been reorganized. Please take a minute
-to look through it, as it's quite the overhaul. The new order goes from
-simple basics to more complex settings as you scroll down, to lower the
-difficulty to use this tool but still retain the tweakability you've
-grown to love.
+ - Fixed not being able to wire anything to the  particle maker
+ - Fixed wierd "NOotice"-styled messages on some places
+ - Fixed error message when trying to spawn particle maker when no material was selected.
 ]]
 
 --

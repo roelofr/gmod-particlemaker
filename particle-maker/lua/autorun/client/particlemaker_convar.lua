@@ -20,7 +20,7 @@ limitations under the License.
 if not ConVarExists("particle_maker_version") then
 
     CreateClientConVar(
-        "particle_maker_version", 2, true, false,
+        "particle_maker_version", 3, true, false,
         "Version number of the Particle Maker"
     )
 
